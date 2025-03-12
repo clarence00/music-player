@@ -2,13 +2,13 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/utils/supabaseClient";
 import * as mm from "music-metadata-browser";
+import Link from "next/link";
 
 export default function Home() {
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [audioFiles, setAudioFiles] = useState([]);
 
-  // Fetch uploaded files on component mount
   useEffect(() => {
     fetchUploadedFiles();
   }, []);
@@ -55,7 +55,6 @@ export default function Home() {
 
     setUploading(true);
 
-    // Upload file to Supabase Storage
     const { data, error } = await supabase.storage
       .from("music")
       .upload(`uploads/${file.name}`, file);
@@ -64,7 +63,6 @@ export default function Home() {
       console.error("Error uploading file:", error);
     } else {
       console.log("File uploaded successfully:", data);
-      // Refresh the list of uploaded files
       await fetchUploadedFiles();
     }
 
@@ -86,6 +84,11 @@ export default function Home() {
         className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-gray-400">
         {uploading ? "Uploading..." : "Upload"}
       </button>
+      <Link href="./artist">
+        <button className="bg-blue-500 text-white px-4 py-2 rounded">
+          Artist
+        </button>
+      </Link>
 
       <div className="mt-8 w-full max-w-2xl">
         <h2 className="text-xl font-semibold mb-4">Uploaded Files:</h2>
